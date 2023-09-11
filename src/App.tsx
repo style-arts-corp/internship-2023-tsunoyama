@@ -3,34 +3,47 @@ import logo from './logo.svg';
 import './App.css';
 import Button from '@mui/material/Button';
 import styled from '@emotion/styled';
+import Header from './components/modules/Header';
+import Checkbox from '@mui/material/Checkbox';
+import { Menu } from '@mui/base/Menu';
+import { MenuButton } from '@mui/base/MenuButton';
+import { MenuItem } from '@mui/base/MenuItem';
+import  Dropdown  from '@mui/base/Dropdown';
+
+const appInfoBoxStyle: React.CSSProperties  = {
+  margin: "3em",
+  padding:"1em",
+  fontSize: "calc(10px + 2vmin)",
+  backgroundColor: "lightgray",
+  textAlign: "start",
+};
 
 function App() {
   return (
     <div>
       <div>
-        <p>
-          {/* aiaiaiaiaiaiai */}
-          test
-          {/* Written by yui666a */}
-        </p>
+        <Header/>
       </div>
       <div className="App">
-        <header className="App-header">
+        <main>
+          <div>
+            <p className="App-bigtext">入庫時刻</p>
+          </div>
+          <div className="App-horizontal">
+          <Checkbox/><p className="App-smalltext">駐車場料金設定の変更</p>
+          </div>
+          <div>
+            <SetButton variant="contained" sx={{backgroundColor: "lightgray"}}>確認</SetButton>
+          </div>
+          <div style={appInfoBoxStyle}>
+            <p>このサイトの使用方法</p>
+            <p>-</p>
+            <p>-</p>
+            <p>-</p>
+            <p>-</p>
+          </div>
           
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <StyledButton variant="contained">Contained</StyledButton>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        </main>
       </div>
     </div>
   );
@@ -38,6 +51,13 @@ function App() {
 
 export default App;
 
-const StyledButton = styled(Button)({
-  borderRadius: 100,
+const SetButton = styled(Button)({
+  borderRadius: 10,
+  color: "black",
+  width: 250,
+  height: 60,
+  fontSize:23
 })
+
+
+
