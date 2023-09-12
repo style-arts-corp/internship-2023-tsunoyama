@@ -2,14 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Confirmation from './Confirmation';
 import reportWebVitals from './reportWebVitals';
+import Header from './components/modules/Header';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <div>
+    <Header/>
+    {<Confirmation/>}
+    {/*<App />*/}
+    </div>
   </React.StrictMode>
 );
 

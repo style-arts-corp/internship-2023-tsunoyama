@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 export default function ButtonAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <StyledAppBar position="static">
+      <StyledAppBar>
         <Toolbar>
           
           {/*<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -26,4 +26,6 @@ export default function ButtonAppBar() {
 const StyledAppBar = styled(AppBar)({
     color : "black",
     backgroundColor : "yellow",
+    position: "fixed",
+    top: 0
   })
