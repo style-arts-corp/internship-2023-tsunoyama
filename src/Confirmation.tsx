@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+
 
 export default function Confirmation(){
     return(

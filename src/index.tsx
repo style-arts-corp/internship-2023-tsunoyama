@@ -13,8 +13,8 @@ root.render(
   <React.StrictMode>
     <div>
     <Header/>
-    {<Confirmation/>}
-    {/*<App />*/}
+    {/* {<Confirmation/>} */}
+    <App />
     </div>
   </React.StrictMode>
 );
