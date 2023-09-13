@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState } from "react";
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
+import dayjs, { Dayjs } from 'dayjs';
 
 
-export default function Confirmation(){
+import SettingWindow from './App';
+
+
+
+export default function Confirmation(props: {handleViewChange:(arg0: number) => void; }){
+    const handleiViewChange = (num:number) => {props.handleViewChange(num)};
     return(
 
     <div>
      <div style={{marginTop:"5em"}}>
-       <ReturnButtonStyle variant="contained" onClick={() => {  }}sx={{backgroundColor: "lightgray"}}>戻る</ReturnButtonStyle>
+       <ReturnButtonStyle variant="contained" onClick={() => {handleiViewChange(0)}}sx={{backgroundColor: "lightgray"}}>戻る</ReturnButtonStyle>
        <p style={Title}>利用金額</p>
        <p style={CostText}>1234<span>円</span></p>
      </div>

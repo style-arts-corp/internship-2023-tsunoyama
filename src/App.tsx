@@ -43,8 +43,8 @@ const HolizontalContents: React.CSSProperties  ={
 
 function App(){
 
-
-
+const [currrentwindow,setwindow] = useState(0);
+const handleViewChange = (newValue:number) => {setwindow(newValue);};
 const [costInfos, setInfos] = useState({
   baseCost: 150,
   baseCostTime: 30,
@@ -72,17 +72,18 @@ const [costInfos, setInfos] = useState({
 
   return (
     <div>
-      <div>
-        <Overlay/>
-      </div>
-      <div className="App">
+      
+      <div className="App" style={{ display: currrentwindow === 0 ? '' : 'none' }}>
+        <div>
+          <Overlay/>
+        </div>
         <main>
           <div>
             <p className="App-bigtext">入庫時刻</p>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimeField
                 value={inputtime}
-                onChange={(newValue:Dayjs) => setInputtime(newValue)}
+                onChange={(newValue) => setInputtime(newValue)}
                 format="HH:mm"
               />
             </LocalizationProvider>
@@ -112,9 +113,9 @@ const [costInfos, setInfos] = useState({
                   <FormControlLabel control={<Checkbox value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode:event.target.checked})}/>} label="夜間で変化"/>
                   <FormControl disabled={!nightmode}>
                     <FormGroup row={true} sx={{textAlign: "end"}}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={costInfos.nightStart} onChange={(newValue:Dayjs) => setInfos({ ...costInfos, nightStart:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => setInfos({ ...costInfos, nightStart:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
                       <p>～</p>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={costInfos.nightEnd} onChange={(newValue:Dayjs) => setInfos({ ...costInfos, nightEnd:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => setInfos({ ...costInfos, nightEnd:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
                       <TextField disabled={!costInfos.nightMode}  value={costInfos.nightCost} type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"5em"}} /><p>円</p>
 
                     </FormGroup>
@@ -133,7 +134,7 @@ const [costInfos, setInfos] = useState({
           {/*<Checkbox/><p className="App-smalltext">駐車場料金設定の変更</p>*/}
           </div>
           <div>
-            <SetButton variant="contained" onClick={() => {  }}sx={{backgroundColor: "lightgray"}}>確認</SetButton>
+            <SetButton variant="contained" onClick={() => { setwindow(1) }}sx={{backgroundColor: "lightgray"}}>確認</SetButton>
           </div>
           <div style={appInfoBoxStyle}>
             <p>このサイトの使用方法</p>
@@ -144,6 +145,9 @@ const [costInfos, setInfos] = useState({
           </div>
           
         </main>
+      </div>
+      <div className="CostView" style={{ display: currrentwindow === 1 ? '' : 'none' }}>
+        <CostView handleViewChange={handleViewChange}/>
       </div>
     </div>
   );
