@@ -76,7 +76,7 @@ const [costInfos, setInfos] = useState({
                 <TimeField
                 value={costInfos.inputtime}
                 onChange={(newValue) =>  setInfos({ ...costInfos, inputtime:newValue as Dayjs})}
-                format="HH:mm"
+                format="YYYY-MM-DD-HH:mm"
               />
             </LocalizationProvider>
           </div>
@@ -108,7 +108,7 @@ const [costInfos, setInfos] = useState({
                       <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightStart:newValue.hour()}):16} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
                       <p>～</p>
                       <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightEnd:newValue.hour()}):8} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
-                      <TextField disabled={!costInfos.nightMode}  value={costInfos.nightCost} type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"5em"}} /><p>円</p>
+                      <TextField disabled={!costInfos.nightMode} type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"5em"}} value={costInfos.nightCost} onChange={(event) => setInfos({ ...costInfos, nightCost:Math.max(0, Math.min(9999, parseInt(event.target.value)))})}/><p>円</p>
 
                     </FormGroup>
                   </FormControl>
