@@ -46,6 +46,7 @@ function App(){
 const [currrentwindow,setwindow] = useState(0);
 const handleViewChange = (newValue:number) => {setwindow(newValue);};
 const [costInfos, setInfos] = useState({
+  inputtime: dayjs(),
   baseCost: 150,
   baseCostTime: 30,
   maxCost: 700,
@@ -70,6 +71,9 @@ const [costInfos, setInfos] = useState({
   const [freetimeover,setFreetimeover] = React.useState(true);
 
 
+  
+
+
   return (
     <div>
       
@@ -82,8 +86,8 @@ const [costInfos, setInfos] = useState({
             <p className="App-bigtext">入庫時刻</p>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimeField
-                value={inputtime}
-                onChange={(newValue) => setInputtime(newValue)}
+                value={costInfos.inputtime}
+                onChange={(newValue) =>  setInfos({ ...costInfos, inputtime:newValue as Dayjs})}
                 format="HH:mm"
               />
             </LocalizationProvider>
@@ -147,7 +151,7 @@ const [costInfos, setInfos] = useState({
         </main>
       </div>
       <div className="CostView" style={{ display: currrentwindow === 1 ? '' : 'none' }}>
-        <CostView handleViewChange={handleViewChange}/>
+        <CostView handleViewChange={handleViewChange} settings={costInfos}/>
       </div>
     </div>
   );

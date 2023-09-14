@@ -1,20 +1,48 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
 
 
 import SettingWindow from './App';
 
 
 
-export default function Confirmation(props: {handleViewChange:(arg0: number) => void; }){
-    const handleiViewChange = (num:number) => {props.handleViewChange(num)};
+const NowTime = () => {
+    const [data, setData] = React.useState<Dayjs | null>(dayjs());
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setData(dayjs());
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, []);
+  
+    return data? data: null;
+  }
+
+ 
+export default function Confirmation(props:any){
+    const handleiViewChange1 = (num:number) => {props.handleViewChange(num)};
+    function elapsedTime()
+    {
+        const now = NowTime() as Dayjs;
+        dayjs.extend(utc);
+      return now ? dayjs(0).utc().millisecond(now.diff(props.settings.inputtime)) : dayjs(0);
+    }
+  
     return(
 
-    <div>
-     <div style={{marginTop:"5em"}}>
-       <ReturnButtonStyle variant="contained" onClick={() => {handleiViewChange(0)}}sx={{backgroundColor: "lightgray"}}>戻る</ReturnButtonStyle>
+    <div style={{marginTop:"5em"}}>
+     <ReturnButtonStyle variant="contained" onClick={() => {handleiViewChange1(0)}}sx={{position:"absolute",backgroundColor: "lightgray"}}>戻る</ReturnButtonStyle>
+    <div style={{position:"relative",left:"60%"}}>
+        <p>入庫時刻 <span>{props.settings.inputtime.format("HH:mm")}</span></p>
+        <p>経過時間 <span>{elapsedTime().format("HH:mm")}</span></p>
+    </div>
+     <div>  
        <p style={Title}>利用金額</p>
        <p style={CostText}>1234<span>円</span></p>
      </div>
