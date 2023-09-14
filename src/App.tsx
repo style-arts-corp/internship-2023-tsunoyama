@@ -56,23 +56,11 @@ const [costInfos, setInfos] = useState({
   nightStart: 16,
   nightEnd: 8,
   nightCost: 500,
+  hasFreetime : true,
   freeTime: 30,
   freeOverInvalid: true
 
 });
-  const [inputtime, setInputtime] = React.useState<Dayjs | null>(dayjs());
-  const [maxcosttime, setMaxcosttime] = React.useState<Dayjs | null>(dayjs().hour(24));
-
-  const [nightmode,setNmode] = React.useState(false);
-  const [nmodeloop,setNmodeloop] = React.useState(false);
-  const [nightstart, setNightstart] = React.useState<Dayjs | null>(dayjs().hour(16));
-  const [nightend, setNightend] = React.useState<Dayjs | null>(dayjs().hour(8));
-  const [hasfreetime,setHasfreetime] = React.useState(true);
-  const [freetimeover,setFreetimeover] = React.useState(true);
-
-
-  
-
 
   return (
     <div>
@@ -115,21 +103,21 @@ const [costInfos, setInfos] = useState({
                   </div>
                   <FormControlLabel control={<Checkbox value={costInfos.maxCostLoop} onChange={(event) => setInfos({ ...costInfos, maxCostLoop:event.target.checked})} />} label="繰り返し"/>
                   <FormControlLabel control={<Checkbox value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode:event.target.checked})}/>} label="夜間で変化"/>
-                  <FormControl disabled={!nightmode}>
+                  <FormControl disabled={!costInfos.nightMode}>
                     <FormGroup row={true} sx={{textAlign: "end"}}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => setInfos({ ...costInfos, nightStart:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightStart:newValue.hour()}):16} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
                       <p>～</p>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => setInfos({ ...costInfos, nightEnd:1234})} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightEnd:newValue.hour()}):8} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
                       <TextField disabled={!costInfos.nightMode}  value={costInfos.nightCost} type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"5em"}} /><p>円</p>
 
                     </FormGroup>
                   </FormControl>
                   <div style={HolizontalContents}>
                     
-                    <FormControlLabel control={<Checkbox onChange={(event) => setHasfreetime(event.target.checked)}/>} label="無料期間"/>
-                    <TextField disabled={!hasfreetime}  type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"3em"}} /><p>分</p>
+                    <FormControlLabel control={<Checkbox value={costInfos.hasFreetime} onChange={(event) => setInfos({ ...costInfos, hasFreetime:event.target.checked})}/>} label="無料期間"/>
+                    <TextField disabled={!costInfos.hasFreetime}  type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"3em"}} value={costInfos.freeTime} onChange={(event) => setInfos({ ...costInfos, freeTime:Math.max(0, Math.min(99, parseInt(event.target.value)))})} /><p>分</p>
                   </div>
-                  <FormControlLabel control={<Checkbox disabled={!hasfreetime} onChange={(event) => setFreetimeover(event.target.checked)}/>} label="超過した場合無効"/>
+                  <FormControlLabel control={<Checkbox disabled={!costInfos.hasFreetime} value={costInfos.freeOverInvalid} onChange={(event) => setInfos({ ...costInfos, freeOverInvalid:event.target.checked})}/>} label="超過した場合無効"/>
                   
                 </FormGroup>
               </Typography>
