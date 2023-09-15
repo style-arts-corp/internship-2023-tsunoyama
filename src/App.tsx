@@ -28,105 +28,105 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 
-const appInfoBoxStyle: React.CSSProperties  = {
+const appInfoBoxStyle: React.CSSProperties = {
   margin: "3em",
-  padding:"1em",
+  padding: "1em",
   fontSize: "calc(10px + 2vmin)",
   backgroundColor: "lightgray",
   textAlign: "start",
 };
 
-const HolizontalContents: React.CSSProperties  ={
-  display:"flex",flexDirection: "row", justifyContent:"space-around"
+const HorizontalContents: React.CSSProperties = {
+  display: "flex", flexDirection: "row", justifyContent: "space-around"
 }
 
 
-function App(){
+function App() {
 
-const [currrentwindow,setwindow] = useState(0);
-const handleViewChange = (newValue:number) => {setwindow(newValue);};
-const [costInfos, setInfos] = useState({
-  inputtime: dayjs(),
-  baseCost: 150,
-  baseCostTime: 30,
-  maxCost: 700,
-  maxCostTime: 24,
-  maxCostLoop:true,
-  nightMode: true,
-  nightStart: 16,
-  nightEnd: 8,
-  nightCost: 500,
-  hasFreetime : true,
-  freeTime: 30,
-  freeOverInvalid: true
+  const [currentWindow, setWindow] = useState(0);
+  const handleViewChange = (newValue: number) => { setWindow(newValue); };
+  const [costInfos, setInfos] = useState({
+    inputTime: dayjs(),
+    baseCost: 150,
+    baseCostTime: 30,
+    maxCost: 700,
+    maxCostTime: 24,
+    maxCostLoop: true,
+    nightMode: true,
+    nightStart: 16,
+    nightEnd: 8,
+    nightCost: 500,
+    hasFreeTime: true,
+    freeTime: 30,
+    freeOverInvalid: true
 
-});
+  });
 
   return (
     <div>
-      
-      <div className="App" style={{ display: currrentwindow === 0 ? '' : 'none' }}>
+
+      <div className="App" style={{ display: currentWindow === 0 ? '' : 'none' }}>
         <div>
-          <Overlay/>
+          <Overlay />
         </div>
         <main>
           <div>
             <p className="App-bigtext">入庫時刻</p>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimeField
-                value={costInfos.inputtime}
-                onChange={(newValue) =>  setInfos({ ...costInfos, inputtime:newValue as Dayjs})}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimeField
+                value={costInfos.inputTime}
+                onChange={(newValue) => setInfos({ ...costInfos, inputTime: newValue as Dayjs })}
                 format="YYYY-MM-DD-HH:mm"
               />
             </LocalizationProvider>
           </div>
-          <div style={{margin:20}}>
-          <Accordion sx={{backgroundColor: "lightgray"}}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography>駐車場料金設定の変更</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <FormGroup sx={{margin:1}}>
-                  <div style={HolizontalContents}>
-                    <p>基本料金</p>
-                    
-                      <TextField type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"4em"}} value={costInfos.baseCost} onChange={(event) => setInfos({ ...costInfos, baseCost:Math.max(0, Math.min(9999, parseInt(event.target.value)))})} /><p>円</p>
-                      <p>/</p>
-                      <TextField type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"3em"}} value={costInfos.baseCostTime} onChange={(event) => setInfos({ ...costInfos, baseCostTime:Math.max(0, Math.min(99, parseInt(event.target.value)))})}/><p>分</p>
-                      
-                  </div>
-                  <div style={HolizontalContents}>
-                    <TextField type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"3em"}} value={costInfos.maxCostTime} onChange={(event) => setInfos({ ...costInfos, maxCostTime:Math.max(0, Math.min(99, parseInt(event.target.value)))})} /><p>時間毎最大料金</p>
-                    <TextField type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"5em"}} value={costInfos.maxCost} onChange={(event) => setInfos({ ...costInfos, maxCost:Math.max(0, Math.min(costInfos.maxCostTime*costInfos.baseCost*(60 / costInfos.baseCostTime), parseInt(event.target.value)))})} /><p>円</p>
-                    
-                  </div>
-                  <FormControlLabel control={<Checkbox value={costInfos.maxCostLoop} onChange={(event) => setInfos({ ...costInfos, maxCostLoop:event.target.checked})} />} label="繰り返し"/>
-                  <FormControlLabel control={<Checkbox value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode:event.target.checked})}/>} label="夜間で変化"/>
-                  <FormControl disabled={!costInfos.nightMode}>
-                    <FormGroup row={true} sx={{textAlign: "end"}}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightStart:newValue.hour()}):16} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
-                      <p>～</p>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => newValue? setInfos({ ...costInfos, nightEnd:newValue.hour()}):8} format="HH" variant="filled" size="small" sx={{height:"1em",width:"3em"}} /></LocalizationProvider><p>時</p>
-                      <TextField disabled={!costInfos.nightMode} type="number" size="small" InputLabelProps={{shrink:true,}}variant="filled" sx={{height:"1em",width:"5em"}} value={costInfos.nightCost} onChange={(event) => setInfos({ ...costInfos, nightCost:Math.max(0, Math.min(9999, parseInt(event.target.value)))})}/><p>円</p>
+          <div style={{ margin: 20 }}>
+            <Accordion sx={{ backgroundColor: "lightgray" }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography>駐車場料金設定の変更</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <FormGroup sx={{ margin: 1 }}>
+                    <div style={HorizontalContents}>
+                      <p>基本料金</p>
 
-                    </FormGroup>
-                  </FormControl>
-                  <div style={HolizontalContents}>
-                    
-                    <FormControlLabel control={<Checkbox value={costInfos.hasFreetime} onChange={(event) => setInfos({ ...costInfos, hasFreetime:event.target.checked})}/>} label="無料期間"/>
-                    <TextField disabled={!costInfos.hasFreetime}  type="number" size="small" inputProps={{inputMode:"numeric",min:0}} InputLabelProps={{shrink:true}}variant="filled" sx={{height:"1em",width:"3em"}} value={costInfos.freeTime} onChange={(event) => setInfos({ ...costInfos, freeTime:Math.max(0, Math.min(99, parseInt(event.target.value)))})} /><p>分</p>
-                  </div>
-                  <FormControlLabel control={<Checkbox disabled={!costInfos.hasFreetime} value={costInfos.freeOverInvalid} onChange={(event) => setInfos({ ...costInfos, freeOverInvalid:event.target.checked})}/>} label="超過した場合無効"/>
-                  
-                </FormGroup>
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          {/*<Checkbox/><p className="App-smalltext">駐車場料金設定の変更</p>*/}
+                      <TextField type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "4em" }} value={costInfos.baseCost} onChange={(event) => setInfos({ ...costInfos, baseCost: Math.max(0, Math.min(9999, parseInt(event.target.value))) })} /><p>円</p>
+                      <p>/</p>
+                      <TextField type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "3em" }} value={costInfos.baseCostTime} onChange={(event) => setInfos({ ...costInfos, baseCostTime: Math.max(0, Math.min(99, parseInt(event.target.value))) })} /><p>分</p>
+
+                    </div>
+                    <div style={HorizontalContents}>
+                      <TextField type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "3em" }} value={costInfos.maxCostTime} onChange={(event) => setInfos({ ...costInfos, maxCostTime: Math.max(0, Math.min(99, parseInt(event.target.value))) })} /><p>時間毎最大料金</p>
+                      <TextField type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "5em" }} value={costInfos.maxCost} onChange={(event) => setInfos({ ...costInfos, maxCost: Math.max(0, Math.min(costInfos.maxCostTime * costInfos.baseCost * (60 / costInfos.baseCostTime), parseInt(event.target.value))) })} /><p>円</p>
+
+                    </div>
+                    <FormControlLabel control={<Checkbox value={costInfos.maxCostLoop} onChange={(event) => setInfos({ ...costInfos, maxCostLoop: event.target.checked })} />} label="繰り返し" />
+                    <FormControlLabel control={<Checkbox value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode: event.target.checked })} />} label="夜間で変化" />
+                    <FormControl disabled={!costInfos.nightMode}>
+                      <FormGroup row={true} sx={{ textAlign: "end" }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => newValue ? setInfos({ ...costInfos, nightStart: newValue.hour() }) : 16} format="HH" variant="filled" size="small" sx={{ height: "1em", width: "3em" }} /></LocalizationProvider><p>時</p>
+                        <p>～</p>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightEnd)} onChange={(newValue) => newValue ? setInfos({ ...costInfos, nightEnd: newValue.hour() }) : 8} format="HH" variant="filled" size="small" sx={{ height: "1em", width: "3em" }} /></LocalizationProvider><p>時</p>
+                        <TextField disabled={!costInfos.nightMode} type="number" size="small" InputLabelProps={{ shrink: true, }} variant="filled" sx={{ height: "1em", width: "5em" }} value={costInfos.nightCost} onChange={(event) => setInfos({ ...costInfos, nightCost: Math.max(0, Math.min(9999, parseInt(event.target.value))) })} /><p>円</p>
+
+                      </FormGroup>
+                    </FormControl>
+                    <div style={HorizontalContents}>
+
+                      <FormControlLabel control={<Checkbox value={costInfos.hasFreeTime} onChange={(event) => setInfos({ ...costInfos, hasFreeTime: event.target.checked })} />} label="無料期間" />
+                      <TextField disabled={!costInfos.hasFreeTime} type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "3em" }} value={costInfos.freeTime} onChange={(event) => setInfos({ ...costInfos, freeTime: Math.max(0, Math.min(99, parseInt(event.target.value))) })} /><p>分</p>
+                    </div>
+                    <FormControlLabel control={<Checkbox disabled={!costInfos.hasFreeTime} value={costInfos.freeOverInvalid} onChange={(event) => setInfos({ ...costInfos, freeOverInvalid: event.target.checked })} />} label="超過した場合無効" />
+
+                  </FormGroup>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            {/*<Checkbox/><p className="App-smalltext">駐車場料金設定の変更</p>*/}
           </div>
           <div>
-            <SetButton variant="contained" onClick={() => { setwindow(1) }}sx={{backgroundColor: "lightgray"}}>確認</SetButton>
+            <SetButton variant="contained" onClick={() => { setWindow(1) }} sx={{ backgroundColor: "lightgray" }}>確認</SetButton>
           </div>
           <div style={appInfoBoxStyle}>
             <p>このサイトの使用方法</p>
@@ -135,11 +135,11 @@ const [costInfos, setInfos] = useState({
             <p>-</p>
             <p>-</p>
           </div>
-          
+
         </main>
       </div>
-      <div className="CostView" style={{ display: currrentwindow === 1 ? '' : 'none' }}>
-        <CostView handleViewChange={handleViewChange} settings={costInfos}/>
+      <div className="CostView" style={{ display: currentWindow === 1 ? '' : 'none' }}>
+        <CostView handleViewChange={handleViewChange} settings={costInfos} />
       </div>
     </div>
   );
@@ -152,7 +152,7 @@ const SetButton = styled(Button)({
   color: "black",
   width: 250,
   height: 60,
-  fontSize:23
+  fontSize: 23
 })
 
 
