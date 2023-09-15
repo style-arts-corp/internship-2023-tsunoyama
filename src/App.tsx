@@ -28,6 +28,27 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 
+export const APP_KEY = 'ParkingCostChecker';
+
+export type Settings = {
+  inputTime: Dayjs,
+  baseCost: number,
+  baseCostTime: number,
+  maxCost: number,
+  maxCostTime: number,
+  maxCostLoop: boolean,
+  nightMode: boolean,
+  nightStart: number,
+  nightEnd: number,
+  nightCost: number,
+  hasFreeTime: boolean,
+  freeTime: number,
+  freeOverInvalid: boolean
+
+}
+
+
+
 const appInfoBoxStyle: React.CSSProperties = {
   margin: "3em",
   padding: "1em",
@@ -41,11 +62,20 @@ const HorizontalContents: React.CSSProperties = {
 }
 
 
-function App() {
+export type saveData = {
+  view: number,
+  setting: Settings
+}
 
-  const [currentWindow, setWindow] = useState(0);
+
+function App() {
+  const appState = localStorage.getItem(APP_KEY);
+  const saveData: saveData = appState ? JSON.parse(appState) : ({ view: 0 });
+
+  const [currentWindow, setWindow] = useState(saveData.view);
   const handleViewChange = (newValue: number) => { setWindow(newValue); };
-  const [costInfos, setInfos] = useState({
+
+  const [costInfos, setInfos] = useState<Settings>(currentWindow === 1 ? { ...saveData.setting, inputTime: dayjs(saveData.setting.inputTime) } : {
     inputTime: dayjs(),
     baseCost: 150,
     baseCostTime: 30,
@@ -59,8 +89,12 @@ function App() {
     hasFreeTime: true,
     freeTime: 30,
     freeOverInvalid: true
-
   });
+
+
+
+
+
 
   return (
     <div>
@@ -74,7 +108,7 @@ function App() {
             <p className="App-bigtext">入庫時刻</p>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimeField
-                value={costInfos.inputTime}
+                value={costInfos?.inputTime}
                 onChange={(newValue) => setInfos({ ...costInfos, inputTime: newValue as Dayjs })}
                 format="YYYY-MM-DD-HH:mm"
               />
@@ -126,7 +160,11 @@ function App() {
             {/*<Checkbox/><p className="App-smalltext">駐車場料金設定の変更</p>*/}
           </div>
           <div>
-            <SetButton variant="contained" onClick={() => { setWindow(1) }} sx={{ backgroundColor: "lightgray" }}>確認</SetButton>
+            <SetButton variant="contained" sx={{ backgroundColor: "lightgray" }}
+              onClick={() => {
+                setWindow(1);
+                localStorage.setItem(APP_KEY, JSON.stringify({ view: 1, setting: costInfos }));
+              }} >確認</SetButton>
           </div>
           <div style={appInfoBoxStyle}>
             <p>このサイトの使用方法</p>

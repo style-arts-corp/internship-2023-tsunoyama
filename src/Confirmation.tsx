@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isBetween from 'dayjs/plugin/isBetween';
+import { Settings } from './App';
+import { APP_KEY } from './App';
 
 const NowTime = () => {
     const [data, setData] = useState<Dayjs | null>(dayjs());
@@ -17,23 +19,6 @@ const NowTime = () => {
     }, []);
 
     return data ? data : null;
-}
-
-type Settings = {
-    inputTime: Dayjs,
-    baseCost: number,
-    baseCostTime: number,
-    maxCost: number,
-    maxCostTime: number,
-    maxCostLoop: boolean,
-    nightMode: boolean,
-    nightStart: number,
-    nightEnd: number,
-    nightCost: number,
-    hasFreeTime: boolean,
-    freeTime: number,
-    freeOverInvalid: boolean
-
 }
 
 type ConfirmationProps = {
@@ -168,7 +153,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({ handleViewChange, settings 
     return (
 
         <div style={{ marginTop: "5em" }}>
-            <ReturnButtonStyle variant="contained" onClick={() => { handleViewChange1(0) }} sx={{ position: "absolute", backgroundColor: "lightgray" }}>戻る</ReturnButtonStyle>
+            <ReturnButtonStyle variant="contained" onClick={() => { handleViewChange1(0); localStorage.setItem(APP_KEY, '') }} sx={{ position: "absolute", backgroundColor: "lightgray" }}>戻る</ReturnButtonStyle>
             <div style={{ position: "relative", left: "60%" }}>
                 <p>入庫時刻 <span>{inputTime.format("HH:mm")}</span></p>
                 <p>経過時間 <span>{elapsedTime().utc().format("HH:mm")}</span></p>
