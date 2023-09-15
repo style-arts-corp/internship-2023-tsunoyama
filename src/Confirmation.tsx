@@ -45,7 +45,8 @@ const Confirmation: React.FC<ConfirmationProps> = ({ handleViewChange, settings 
     //  function Confirmation() {
     const handleViewChange1 = (num: number) => { handleViewChange(num) };
     let nextCostTime = dayjs();
-    const { inputTime, baseCost, baseCostTime, maxCost, maxCostTime, maxCostLoop, nightStart, nightEnd, nightCost } = settings;
+    //Appから料金設定の受け取り、夜間設定なしの場合は夜間最大料金は通常の最大料金とする
+    const { inputTime, baseCost, baseCostTime, maxCost, maxCostTime, maxCostLoop, nightStart, nightEnd, nightCost } = { ...settings, nightCost: settings.nightMode ? settings.nightCost : settings.maxCost };
 
 
     function elapsedTime(mode: dayjs.QUnitType | dayjs.OpUnitType = 'ms') {
@@ -153,7 +154,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({ handleViewChange, settings 
                 // console.log(nextTime.format());
                 // console.log(nextAddTime(nextTime, tmpCost).format());
                 nextCostTime = nextAddTime(nextTime, tmpCost);
-                console.log("nextCostTime", nextCostTime)
+                // console.log("nextCostTime", nextCostTime)
             }
 
 
@@ -178,7 +179,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({ handleViewChange, settings 
             </div>
             <div>
                 <p style={subTitle}>次の追加料金の発生は</p>
-                <p style={Title}><span>{nextCostTime.format("HH:mm")}</span></p>
+                <p style={Title}><span>{nextCostTime.format("DD日 HH:mm")}</span></p>
             </div>
         </div>
     );

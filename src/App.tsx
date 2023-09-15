@@ -65,7 +65,7 @@ function App() {
   return (
     <div>
 
-      <div className="App" style={{ display: currentWindow === 0 ? '' : 'none' }}>
+      <div className="App" style={{ display: currentWindow === 0 ? '' : 'none', marginTop: "5em" }}>
         <div>
           <Overlay />
         </div>
@@ -101,8 +101,8 @@ function App() {
                       <TextField type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "5em" }} value={costInfos.maxCost} onChange={(event) => setInfos({ ...costInfos, maxCost: Math.max(0, Math.min(costInfos.maxCostTime * costInfos.baseCost * (60 / costInfos.baseCostTime), parseInt(event.target.value))) })} /><p>円</p>
 
                     </div>
-                    <FormControlLabel control={<Checkbox value={costInfos.maxCostLoop} onChange={(event) => setInfos({ ...costInfos, maxCostLoop: event.target.checked })} />} label="繰り返し" />
-                    <FormControlLabel control={<Checkbox value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode: event.target.checked })} />} label="夜間で変化" />
+                    <FormControlLabel control={<Checkbox defaultChecked value={costInfos.maxCostLoop} onChange={(event) => setInfos({ ...costInfos, maxCostLoop: event.target.checked })} />} label="繰り返し" />
+                    <FormControlLabel control={<Checkbox defaultChecked value={costInfos.nightMode} onChange={(event) => setInfos({ ...costInfos, nightMode: event.target.checked })} />} label="夜間で変化" />
                     <FormControl disabled={!costInfos.nightMode}>
                       <FormGroup row={true} sx={{ textAlign: "end" }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}><TimeField disabled={!costInfos.nightMode} value={dayjs().hour(costInfos.nightStart)} onChange={(newValue) => newValue ? setInfos({ ...costInfos, nightStart: newValue.hour() }) : 16} format="HH" variant="filled" size="small" sx={{ height: "1em", width: "3em" }} /></LocalizationProvider><p>時</p>
@@ -114,10 +114,10 @@ function App() {
                     </FormControl>
                     <div style={HorizontalContents}>
 
-                      <FormControlLabel control={<Checkbox value={costInfos.hasFreeTime} onChange={(event) => setInfos({ ...costInfos, hasFreeTime: event.target.checked })} />} label="無料期間" />
+                      <FormControlLabel control={<Checkbox defaultChecked value={costInfos.hasFreeTime} onChange={(event) => setInfos({ ...costInfos, hasFreeTime: event.target.checked })} />} label="無料期間" />
                       <TextField disabled={!costInfos.hasFreeTime} type="number" size="small" inputProps={{ inputMode: "numeric", min: 0 }} InputLabelProps={{ shrink: true }} variant="filled" sx={{ height: "1em", width: "3em" }} value={costInfos.freeTime} onChange={(event) => setInfos({ ...costInfos, freeTime: Math.max(0, Math.min(99, parseInt(event.target.value))) })} /><p>分</p>
                     </div>
-                    <FormControlLabel control={<Checkbox disabled={!costInfos.hasFreeTime} value={costInfos.freeOverInvalid} onChange={(event) => setInfos({ ...costInfos, freeOverInvalid: event.target.checked })} />} label="超過した場合無効" />
+                    <FormControlLabel control={<Checkbox defaultChecked disabled={!costInfos.hasFreeTime} value={costInfos.freeOverInvalid} onChange={(event) => setInfos({ ...costInfos, freeOverInvalid: event.target.checked })} />} label="超過した場合無効" />
 
                   </FormGroup>
                 </Typography>
