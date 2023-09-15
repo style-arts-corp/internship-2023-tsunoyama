@@ -139,7 +139,7 @@ function App() {
         </main>
       </div>
       <div className="CostView" style={{ display: currentWindow === 1 ? '' : 'none' }}>
-        <CostView handleViewChange={handleViewChange} settings={costInfos} />
+        {currentWindow === 1 && <CostView handleViewChange={handleViewChange} settings={costInfos} />}
       </div>
     </div>
   );
