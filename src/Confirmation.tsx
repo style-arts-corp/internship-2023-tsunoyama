@@ -22,7 +22,7 @@ const NowTime = () => {
  
 export default function Confirmation(props:any){
     const handleiViewChange1 = (num:number) => {props.handleViewChange(num)};
-    const [nextCostTime,setNextCostTime] = React.useState<Dayjs | null>(null);
+    let nextCostTime = dayjs();
 
 
     function elapsedTime(mode:dayjs.QUnitType | dayjs.OpUnitType='ms')
@@ -30,6 +30,38 @@ export default function Confirmation(props:any){
         const now = NowTime() as Dayjs;
         dayjs.extend(utc);
       return now ? dayjs(0).millisecond(now.diff(props.settings.inputtime,mode)) : dayjs(0);
+    }
+
+    function isDayMode(time:Dayjs)
+    {
+        return time.isBetween(time.hour(props.settings.nightEnd).minute(0),time.hour(props.settings.nightStart).minute(0), 'm');
+    }
+
+    function nextAddTime(time:Dayjs,nowCost:number)
+    {
+        const offset = props.settings.inputtime.minute()%props.settings.baseCostTime;
+        //if(nowCost<(isDayMode(time)?props.settings.maxCost:props.settings.nightCost)) return time;
+
+        if(nowCost<props.settings.maxCost)
+        {
+            // if(nowCost<)
+            // else return props.settings.inputtime.day(time).add(1,'d');
+        }
+        // if(isDayMode(time))
+        // {
+        //     if(dayCost<props.settings.maxCost) return time;
+        //     else return time.hour(props.settings.nightStart).minute(0).add(offset, 'm');
+        // }
+        // else
+        // {
+        //     if(nightCost<props.settings.nightCost) return time;
+        //     else 
+        //     {
+        //         if(time.hour()<=props.settings.nightEnd) return time.hour(props.settings.nightEnd).minute(0).add(offset, 'm');
+        //         else return time.hour(props.settings.nightEnd).minute(0).add(1,'d').add(offset, 'm');
+        //     }
+            
+        // }
     }
 
 
@@ -41,51 +73,37 @@ export default function Confirmation(props:any){
      let maxflag = true;
      const maxCostTimeMin = 60*props.settings.maxCostTime;
      
-     for(;time>0;time-=maxCostTimeMin)
+     //24時間毎繰り返し(最大料金処理)
+     for(;time>0;)
      { 
-        // let debug = 0;
+        let debug = 0;
         // let debug2 = 0;
         
         //24時間ごとの加算金額
-        let tmpCostDay=0;
-        let tmpCostNight=0;
+        let tmpCost=0;
 
-        //24時間毎繰り返し
+        //30分毎繰り返し(基本料金加算)
         for(let tmptime=0;tmptime<=Math.min(time,maxCostTimeMin);tmptime+=props.settings.baseCostTime)
         {
-            
-            let isAddCost = false;
-            
-            // console.log("nextTime"+nextTime.format("YYYY-MM-DD-HH:mm")+" End"+nextTime.hour(props.settings.nightEnd).format("YYYY-MM-DD-HH:mm")+" Start"+nextTime.hour(props.settings.nightStart).format("YYYY-MM-DD-HH:mm"));   
             dayjs.extend(isBetween);
-            if(nextTime.isBetween(nextTime.hour(props.settings.nightEnd),nextTime.hour(props.settings.nightStart), 'm'))
+            if(maxflag&&(tmpCost < (isDayMode(nextTime)?props.settings.maxCost:props.settings.nightCost)))
             {
-                if(maxflag&&(tmpCostDay<props.settings.maxCost))
-                {
-                    tmpCostDay = Math.min(tmpCostDay+props.settings.baseCost,props.settings.maxCost);
-                    // isAddCost = true;
-                    // debug++;
-                }
+                tmpCost = Math.min(tmpCost+props.settings.baseCost,((isDayMode(nextTime)||result>props.settings.nightCost)?props.settings.maxCost:props.settings.nightCost));
             }
-            else
-            {
-                if(maxflag&&(tmpCostNight<props.settings.nightCost))
-                {
-                    tmpCostNight = Math.min(tmpCostNight+props.settings.baseCost,props.settings.nightCost);
-                    // isAddCost = true;
-                    // debug2++;
-                }  
-            }
-            // if(isAddCost){if(!nextCostTime) setNextCostTime(nextTime);}
-
+            debug++;
+            console.log("["+debug+","+nextTime.format("HH:mm")+isDayMode(nextTime)+"]"+tmpCost);
             nextTime = nextTime.add(props.settings.baseCostTime, 'm');
             
         }
-        result += tmpCostDay + tmpCostNight;
-        // console.log("D"+tmpCostDay+"("+debug+")"+" N"+tmpCostNight+"("+debug2+")");
+        result += tmpCost;
+        
         
         // result+=Math.min(Math.floor(time%maxCostTimeSec / (60 * props.settings.baseCostTime) + 1)*props.settings.baseCost,maxflag? props.settings.maxCost:Infinity)
-        // if(!props.settings.maxCostLoop)maxflag = false;
+        if(!props.settings.maxCostLoop)maxflag = false;
+        time-=maxCostTimeMin;
+        // if(time<=0) nextCostTime =nextAddTime(nextTime,tmpCost);
+
+        
         
      }
      
